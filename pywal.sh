@@ -18,6 +18,6 @@ osascript -e 'tell application "Alfred 4"
         quit
 end tell
 
-delay 0.1
+delay 0.2
 
 tell application "Alfred 4" to activate'
