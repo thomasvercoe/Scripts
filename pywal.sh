@@ -2,22 +2,23 @@
 
 current_wallpaper="$(osascript -e 'tell app "finder" to get posix path of (get desktop picture as alias)')"
 
-#SCAPED_REPLACE=$(printf '%s\n' "\ " | sed -e 's/[\/&]/\\&/g')
+old_wallpaper=$(cat /tmp/pywal.txt)
 
-#mcw() {
-    #echo $current_wallpaper | sed "s/ /$ESCAPED_REPLACE/g"
-#
-#mcwe=$(mcw)
+if [ "$current_wallpaper" != "$old_wallpaper" ]
+then
 
-wal -i "$current_wallpaper" -n
+    wal -i "$current_wallpaper" -n
 
 
-#reload alfred
+    #reload alfred
+    osascript -e 'tell application "Alfred 4"
+                quit
+        end tell
 
-osascript -e 'tell application "Alfred 4"
-        quit
-end tell
+        delay 0.2
 
-delay 0.2
+        tell application "Alfred 4" to activate'
 
-tell application "Alfred 4" to activate'
+fi
+
+echo "$current_wallpaper" > /tmp/pywal.txt
