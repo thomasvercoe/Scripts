@@ -17,7 +17,7 @@ then
 
         delay 0.05
 
-        tell application "Alfred 4" to activate'
+        tell application "Alfred 4" to open'
 
 fi
 
