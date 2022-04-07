@@ -17,52 +17,55 @@ then
                 tell application "Alfred 4"
                         quit
                 end tell
-        end try
 
-        delay 0.05
-        try 
-                tell application "Alfred 4" to open
-        end try
+                delay 0.05
+                try 
+                        tell application "Alfred 4" to open
+                end try
 
-        delay 0.05
-        try 
-                tell application "Alfred 4" to open
-        end try
+                delay 0.05
+                try 
+                        tell application "Alfred 4" to open
+                end try
 
-        delay 0.1
-        try 
-                tell application "Alfred 4" to open
-        end try
+                delay 0.1
+                try 
+                        tell application "Alfred 4" to open
+                end try
 
-        delay 0.1
-        try 
-                tell application "Alfred 4" to open
-        end try
+                delay 0.1
+                try 
+                        tell application "Alfred 4" to open
+                end try
 
-        delay 0.1
-        try 
-                tell application "Alfred 4" to open
-        end try
+                delay 0.1
+                try 
+                        tell application "Alfred 4" to open
+                end try
 
-        delay 0.1
-        try 
-                tell application "Alfred 4" to open
-        end try
+                delay 0.1
+                try 
+                        tell application "Alfred 4" to open
+                end try
 
-        delay 0.25
-        try 
-                tell application "Alfred 4" to open
-        end try
+                delay 0.25
+                try 
+                        tell application "Alfred 4" to open
+                end try
 
-        delay 0.25
-        try 
-                tell application "Alfred 4" to open
-        end try
+                delay 0.25
+                try 
+                        tell application "Alfred 4" to open
+                end try
 
-        delay 0.5
-        try 
-                tell application "Alfred 4" to open
+                delay 0.5
+                try 
+                        tell application "Alfred 4" to open
+                end try
+                
         end try'
+
+
 
 fi
 
