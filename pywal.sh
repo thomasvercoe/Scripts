@@ -9,16 +9,61 @@ then
 
     wal -i "$current_wallpaper" -n
 
+    echo "$current_wallpaper" > /tmp/pywal.txt
 
     #reload alfred
-    osascript -e 'tell application "Alfred 4"
-                quit
-        end tell
+    osascript -e '
+        try
+                tell application "Alfred 4"
+                        quit
+                end tell
+        end try
 
         delay 0.05
+        try 
+                tell application "Alfred 4" to open
+        end try
 
-        tell application "Alfred 4" to open'
+        delay 0.05
+        try 
+                tell application "Alfred 4" to open
+        end try
+
+        delay 0.1
+        try 
+                tell application "Alfred 4" to open
+        end try
+
+        delay 0.1
+        try 
+                tell application "Alfred 4" to open
+        end try
+
+        delay 0.1
+        try 
+                tell application "Alfred 4" to open
+        end try
+
+        delay 0.1
+        try 
+                tell application "Alfred 4" to open
+        end try
+
+        delay 0.25
+        try 
+                tell application "Alfred 4" to open
+        end try
+
+        delay 0.25
+        try 
+                tell application "Alfred 4" to open
+        end try
+
+        delay 0.5
+        try 
+                tell application "Alfred 4" to open
+        end try'
 
 fi
 
-echo "$current_wallpaper" > /tmp/pywal.txt
+
