@@ -13,6 +13,6 @@ then
 
     #reload alfred
     killall "Alfred"
-    open -a "Alfred 4"
+    open -j -a "Alfred 4"
 
 fi
