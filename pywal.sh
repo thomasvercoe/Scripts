@@ -1,5 +1,7 @@
 #! /bin/bash
 
+touch /tmp/pywal.txt
+
 current_wallpaper="$(osascript -e 'tell app "finder" to get posix path of (get desktop picture as alias)')"
 
 old_wallpaper=$(cat /tmp/pywal.txt)
