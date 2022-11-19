@@ -74,7 +74,7 @@ then
     echo "[$(date +"%T")] asigning to films" >> $log
     ARG_LABEL="Movies"
 
-filebot -script fn:amc --output "/data/thomas/media" --action hardlink --conflict skip -non-strict --log-file /tmp/amc.log --def unsorted=n music=n artwork=n ut_dir="$ARG_PATH" ut_kind="multi" ut_title="$ARG_NAME" ut_label="$ARG_LABEL" "movieFormat=/data/thomas/media/Movies/{n} ({y})//{n} ({y}) [{hdrbitdepth}bit]" | sed "s/^/[$(date +"%T")] -> /" >> $log
+filebot -script fn:amc --output "/data/thomas/media" --action hardlink --conflict skip -non-strict --log-file /tmp/amc.log --def unsorted=n music=n artwork=n ut_dir="$ARG_PATH" ut_kind="multi" ut_title="$ARG_NAME" ut_label="$ARG_LABEL" "movieFormat=/data/thomas/media/Movies/{n} ({y})//{n} ({y}) [{gigabytes}gB]" | sed "s/^/[$(date +"%T")] -> /" >> $log
 
 
 #music
