@@ -26,7 +26,7 @@ permission_fix () {
 jellyfin_rescan () {
     permission_fix
     echo "[$(date +"%T")] running jellyfin rescan" >> $log
-    curl -v -d "" -H "X-MediaBrowser-Token: 50b2821357244e229265c7f967dcd174" http://127.0.0.1:8096/library/refresh | sed "s/^/[$(date +"%T")] -> /" >> $log
+    curl -v -d "" -H "X-MediaBrowser-Token: 50b2821357244e229265c7f967dcd174" http://127.0.0.1:8096/library/refresh 2>&1 | sed "s/^/[$(date +"%T")] -> /" >> $log
 }
 
 exiting () {
@@ -65,7 +65,8 @@ then
     echo "[$(date +"%T")] asigning to shows" >> $log
     ARG_LABEL="TV"
 
-filebot -script fn:amc --output "/data/thomas/media" --action hardlink --conflict skip -non-strict --log-file /tmp/amc.log --def unsorted=n music=n artwork=n excludeList=amc.txt ut_dir="$ARG_PATH" ut_kind="multi" ut_title="$ARG_NAME" ut_label="$ARG_LABEL" | sed "s/^/[$(date +"%T")] -> /" >> $log
+    echo "[$(date +"%T")] Running Filebot amc script" >> $log
+    filebot -script fn:amc --output "/data/thomas/media" --action hardlink --conflict skip -non-strict --log-file /tmp/amc.log --def unsorted=n music=n artwork=n excludeList=amc.txt ut_dir="$ARG_PATH" ut_kind="multi" ut_title="$ARG_NAME" ut_label="$ARG_LABEL" | sed "s/^/[$(date +"%T")] -> /" >> $log
 
 
 #films
@@ -74,7 +75,35 @@ then
     echo "[$(date +"%T")] asigning to films" >> $log
     ARG_LABEL="Movies"
 
-filebot -script fn:amc --output "/data/thomas/media" --action hardlink --conflict skip -non-strict --log-file /tmp/amc.log --def unsorted=n music=n artwork=n excludeList=amc.txt ut_dir="$ARG_PATH" ut_kind="multi" ut_title="$ARG_NAME" ut_label="$ARG_LABEL" "movieFormat=/data/thomas/media/Movies/{n} ({y})//{n} ({y}) [{gigabytes}gB]" | sed "s/^/[$(date +"%T")] -> /" >> $log
+    echo "[$(date +"%T")] Testing if HDR" >> $log
+    HDR_TEST="$(mediainfo --Inform="Video;%HDR_Format%" "$ARG_PATH")"
+    echo "[$(date +"%T")] Testing if Blue-ray Disk" >> $log
+    BD_TEST="$(find "$ARG_PATH" -name BDMV)"
+
+    echo "[$(date +"%T")] Running Filebot amc script" >> $log
+    filebot -script fn:amc --output "/data/thomas/media" --action hardlink --conflict skip -non-strict --log-file /tmp/amc.log --def unsorted=n music=n artwork=n excludeList=amc.txt ut_dir="$ARG_PATH" ut_kind="multi" ut_title="$ARG_NAME" ut_label="$ARG_LABEL" "movieFormat=/data/thomas/media/Movies/{n} ({y})//{n} ({y}) [T3mp]" | sed "s/^/[$(date +"%T")] -> /" >> $log
+
+    permission_fix
+
+    #I'm sure there is a better way to do this. I don't know it tho :(
+    NEW_LOCATION=$(find /data/thomas/media/Movies -name '*T3mp*')
+    
+    #Tagging as HDR Blue-ray Disk or leaving alone
+    if [ "$HDR_TEST" != '' ]
+    then
+        echo "[$(date +"%T")] Tagging as HDR" >> $log
+        mv "$NEW_LOCATION" "${NEW_LOCATION//' [T3mp]'/' [HDR]'}" 2>&1 | sed "s/^/[$(date +"%T")] -> /" >> $log
+
+    elif [[ "$BD_TEST != '' ]]
+    then
+        echo "[$(date +"%T")] Tagging as a Blue-ray Disk" >> $log
+        mv "$NEW_LOCATION" "${NEW_LOCATION//' [T3mp]'/' [BD]'}" 2>&1 | sed "s/^/[$(date +"%T")] -> /" >> $log
+
+    else
+        echo "[$(date +"%T")] Leaving untagged" >> $log
+        mv "$NEW_LOCATION" "${NEW_LOCATION//' [T3mp]'/}" 2>&1 | sed "s/^/[$(date +"%T")] -> /" >> $log
+    fi
+
 
 
 #music
@@ -83,7 +112,8 @@ then
     echo "[$(date +"%T")] asigning to music" >> $log
     ARG_LABEL="Music"
 
-filebot -script fn:amc --output "/data/thomas/media" --action hardlink --conflict skip -non-strict --log-file /tmp/amc.log --def unsorted=n music=y artwork=n excludeList=amc.txt ut_dir="$ARG_PATH" ut_kind="multi" ut_title="$ARG_NAME" ut_label="$ARG_LABEL" | sed "s/^/[$(date +"%T")] -> /" >> $log
+    echo "[$(date +"%T")] Running Filebot amc script" >> $log
+    filebot -script fn:amc --output "/data/thomas/media" --action hardlink --conflict skip -non-strict --log-file /tmp/amc.log --def unsorted=n music=y artwork=n excludeList=amc.txt ut_dir="$ARG_PATH" ut_kind="multi" ut_title="$ARG_NAME" ut_label="$ARG_LABEL" | sed "s/^/[$(date +"%T")] -> /" >> $log
 
 
 
@@ -138,8 +168,6 @@ then
 
     echo "[$(date +"%T")] cleaning books_tmp" >> $log
     rm -r "$hardlink"
-
-    jellyfin_rescan
 
     exiting
 
