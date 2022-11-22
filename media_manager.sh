@@ -30,7 +30,6 @@ jellyfin_rescan () {
 }
 
 exiting () {
-    permission_fix
     echo "[$(date +"%T")] backing up torrent_files to torrent_files_archive" >> $log
     echo "[$(date +"%T")] copying torrent_files to torrent_files_archive_tmp" >> $log
     cp -r "/data/thomas/torrents/torrent_files" "/home/thomas/Downloads/torrent_files_archive_tmp"
@@ -41,8 +40,6 @@ exiting () {
     mv "/home/thomas/Downloads/torrent_files_archive_tmp" "/home/thomas/Downloads/torrent_files_archive"
     echo "[$(date +"%T")] fixing permisions for torrent_files_archive" >> $log
     chmod -R 777 /home/thomas/Downloads/torrent_files_archive
-    echo "[$(date +"%T")] cleaning torrent_files_archive_tmp" >> $log
-    #rm -r "/home/thomas/Downloads/torrent_files_archive_tmp"
     jellyfin_rescan
     echo "[$(date +"%T")] exiting" >> $log
     exit
@@ -81,7 +78,7 @@ then
     BD_TEST="$(find "$ARG_PATH" -name BDMV)"
 
     echo "[$(date +"%T")] Running Filebot amc script" >> $log
-    filebot -script fn:amc --output "/data/thomas/media" --action hardlink --conflict skip -non-strict --log-file /tmp/amc.log --def unsorted=n music=n artwork=n excludeList=amc.txt ut_dir="$ARG_PATH" ut_kind="multi" ut_title="$ARG_NAME" ut_label="$ARG_LABEL" "movieFormat=/data/thomas/media/Movies/{n} ({y})//{n} ({y}) [T3mp]" | sed "s/^/[$(date +"%T")] -> /" >> $log
+    filebot -script fn:amc --output "/data/thomas/media" --action hardlink --conflict skip -non-strict --log-file /tmp/amc.log --def unsorted=n music=n artwork=n excludeList=amc.txt ut_dir="$ARG_PATH" ut_kind="multi" ut_title="$ARG_NAME" ut_label="$ARG_LABEL" "movieFormat=/data/thomas/media/Movies/{n} ({y})//{n} ({y}) - [T3mp]" | sed "s/^/[$(date +"%T")] -> /" >> $log
 
     permission_fix
 
@@ -92,16 +89,16 @@ then
     if [ "$HDR_TEST" != '' ]
     then
         echo "[$(date +"%T")] Tagging as HDR" >> $log
-        mv "$NEW_LOCATION" "${NEW_LOCATION//' [T3mp]'/' [HDR]'}" 2>&1 | sed "s/^/[$(date +"%T")] -> /" >> $log
+        mv "$NEW_LOCATION" "${NEW_LOCATION//' - [T3mp]'/' - [HDR]'}" 2>&1 | sed "s/^/[$(date +"%T")] -> /" >> $log
 
-    elif [[ "$BD_TEST != '' ]]
+    elif [[ "$BD_TEST" != '' ]]
     then
         echo "[$(date +"%T")] Tagging as a Blue-ray Disk" >> $log
-        mv "$NEW_LOCATION" "${NEW_LOCATION//' [T3mp]'/' [BD]'}" 2>&1 | sed "s/^/[$(date +"%T")] -> /" >> $log
+        mv "$NEW_LOCATION" "${NEW_LOCATION//' - [T3mp]'/' - [BD]'}" 2>&1 | sed "s/^/[$(date +"%T")] -> /" >> $log
 
     else
         echo "[$(date +"%T")] Leaving untagged" >> $log
-        mv "$NEW_LOCATION" "${NEW_LOCATION//' [T3mp]'/}" 2>&1 | sed "s/^/[$(date +"%T")] -> /" >> $log
+        mv "$NEW_LOCATION" "${NEW_LOCATION//' - [T3mp]'/}" 2>&1 | sed "s/^/[$(date +"%T")] -> /" >> $log
     fi
 
 
