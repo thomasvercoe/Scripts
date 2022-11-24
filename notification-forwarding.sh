@@ -14,5 +14,6 @@ if [[ $string == *"hexchat"* ]]
 
 fi
 
-#To be used with the following command added to xinitrc
+# To be used with the following command
+# run it how you want
 #dbus-monitor "interface='org.freedesktop.Notifications'" | grep --line-buffered "string" | grep --line-buffered -e method -e ":" -e '""' -e urgency -e notify -v | grep --line-buffered '.*(?=string)|(?<=string).*' -oPi | grep --line-buffered -v '^\s*$' | xargs -I '{}' /bin/bash /home/thomas/scripts/notification-forwarding.sh {}
